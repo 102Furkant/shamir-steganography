@@ -19,5 +19,16 @@ void embed_bits_to_cover_image (int lsb_bit_count, unsigned char* new_secret_ima
                                 uint8_t mask, uint8_t bits_arr[], unsigned char* cover_image);
 
 
+int decode_n_bytes_metadata(unsigned char* cover_image, int how_many_bytes);
+
+void decode_8_bytes_data_to_arr(uint8_t bits_arr[], unsigned char* cover_image, size_t cover_image_index, int lsb_bit_count);
+
+void de_embed_bits_to_bytes_arr(uint8_t bits_arr[],uint8_t bytes_arr[], int lsb_bit_count);
+
+void set_secret_image(int lsb_bit_count, unsigned char* secret_image, size_t secret_image_index, uint8_t de_embeded_bytes[], size_t secret_image_total_byte);
+
+int steganografi_decode(const char* image_path, int which_photo);
+
+
 
 #endif

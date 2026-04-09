@@ -48,7 +48,7 @@ int steganografi_encode (const char *cover_image_path, const char *secret_image_
     size_t cover_image_index = METADATA_SIZE;
     size_t secret_image_index = 0;
     
-    uint8_t mask = (1 << lsb_bit_count) - 1; // m-bit mask, e.g. m=3 → 0b00000111 = 7
+    uint8_t mask = (1 << lsb_bit_count) - 1; // m-bit mask, e.g. m=3 → 0b00000111 = 7 (m = lsb_bit_count)
     
     while (secret_image_index + lsb_bit_count <= new_secret_image_total_byte
            && cover_image_index + 8 <= width_cover_image * height_cover_image * 3) {
