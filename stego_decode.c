@@ -39,7 +39,7 @@ int steganografi_decode(const char* image_path, int which_photo) {
     unsigned char *secret_image = malloc(secret_image_total_byte);
 
     if (!secret_image) {
-        printf("Bellek ayırma hatası!\n");
+        printf("Failed to load images.\n");
         stbi_image_free(cover_image);
         return 1;
     }
