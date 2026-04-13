@@ -7,11 +7,11 @@
 #include <string.h>
 
 
-int steganografi_decode(const char* image_path, int which_photo) {
+int steganography_decode(const char *image_path, int which_photo) {
 
     int width_cover_image, height_cover_image, comp_cover_image;
 
-    unsigned char* cover_image = stbi_load(image_path, &width_cover_image, &height_cover_image, &comp_cover_image, 3);
+    unsigned char *cover_image = stbi_load(image_path, &width_cover_image, &height_cover_image, &comp_cover_image, 3);
 
     if (!cover_image) {
         printf("Failed to load images.\n");
@@ -80,7 +80,7 @@ int steganografi_decode(const char* image_path, int which_photo) {
 }
 
 
-int decode_n_bytes_metadata(unsigned char* cover_image, int how_many_bytes) {
+int decode_n_bytes_metadata(unsigned char *cover_image, int how_many_bytes) {
 
     int secret_value = 0;
 
@@ -94,7 +94,7 @@ int decode_n_bytes_metadata(unsigned char* cover_image, int how_many_bytes) {
     return secret_value;
 }
 
-void decode_8_bytes_data_to_arr(uint8_t bits_arr[], unsigned char* cover_image, size_t cover_image_index, int lsb_bit_count) {
+void decode_8_bytes_data_to_arr(uint8_t bits_arr[], unsigned char *cover_image, size_t cover_image_index, int lsb_bit_count) {
     // Read 8 pixels from cover image and extract the m LSBs from each
 
     uint8_t mask = (1 << lsb_bit_count) - 1; // m-bit mask, e.g. m=3 → 0b00000111 = 7 (m = lsb_bit_count)
@@ -115,7 +115,7 @@ void de_embed_bits_to_bytes_arr(uint8_t bits_arr[],uint8_t bytes_arr[], int lsb_
     }
 }
 
-void set_secret_image(int lsb_bit_count, unsigned char* secret_image, size_t secret_image_index, uint8_t de_embeded_bytes[], size_t secret_image_total_byte) {
+void set_secret_image(int lsb_bit_count, unsigned char *secret_image, size_t secret_image_index, uint8_t de_embeded_bytes[], size_t secret_image_total_byte) {
     // Write reconstructed bytes into secret image, skip padding bytes
     for (int i = 0; i < lsb_bit_count; i++) {
         if (secret_image_index + i < secret_image_total_byte) {

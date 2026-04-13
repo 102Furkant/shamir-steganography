@@ -7,12 +7,10 @@
 #include <utils.h>
 
 extern int N, K;   // N: total number of shares, K: threshold and provided by the user in main
-extern void generate_permutation(size_t *perm, size_t n);
-extern void apply_permutation(const char *input, char *shuffled, size_t *perm, size_t n);
 
 int sss_encode(const char *secret_image_path, char **sss_encoded_image_names, size_t seed) {
 
-    int* polynomial_coefficients = (int *)malloc(K * sizeof(int));   // Holds the polynomial coefficients
+    int *polynomial_coefficients = (int *)malloc(K * sizeof(int));   // Holds the polynomial coefficients
 
     int image_width, image_height, image_comp;
     unsigned char *main_image = stbi_load(secret_image_path, &image_width, &image_height, &image_comp, 0);
@@ -26,7 +24,7 @@ int sss_encode(const char *secret_image_path, char **sss_encoded_image_names, si
     size_t image_total_byte = image_width * image_height * image_comp;
 
     // To avoid issues with white colors; since 253 % 251 = 2 % 251, a value of 253 would be calculated as 2 during decoding. This step is to eliminate that problem
-    for (int i = 0; i < image_total_byte; i++)   if (main_image[i] > 250) main_image[i] = 250;
+    for (int i = 0; i < image_total_byte; i++)   if (main_image[i] > PRIME_NUMBER - 1) main_image[i] = PRIME_NUMBER - 1;
 
     size_t *perm = malloc(image_total_byte * sizeof(size_t));
 
@@ -86,7 +84,7 @@ int sss_encode(const char *secret_image_path, char **sss_encoded_image_names, si
 }
 
 
-void generate_random_polynomial_coefficient(int* polynomial_coefficients) {
+void generate_random_polynomial_coefficient(int *polynomial_coefficients) {
     for (int i = 1; i < K; i++) {
         polynomial_coefficients[i] = rand() % 51;
     }
@@ -101,7 +99,7 @@ long long int int_pow(int base, int exponent) {
 
 /* polynomial_coefficients = (115, 17, 41) means 115*x^0, 17*x^1, 41*x^2
    so coeff_index serves as both the array index and the exponent. */
-void encode_byte(int* polynomial_coefficients, unsigned char* encoded_images, size_t byte_index, size_t image_total_byte) {
+void encode_byte(int *polynomial_coefficients, unsigned char *encoded_images, size_t byte_index, size_t image_total_byte) {
     for (int share_index = 0; share_index < N; share_index++) {   // Sets the i-th pixel for each image (for N images)
         int sum = 0;
         for (int coeff_index = 0; coeff_index < K; coeff_index++)   // The for loop that constructs the polynomial and writes to the images
