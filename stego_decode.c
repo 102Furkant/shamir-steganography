@@ -84,7 +84,7 @@ int decode_n_bytes_metadata(unsigned char *cover_image, int how_many_bytes) {
 
     int secret_value = 0;
 
-    for(int i = 0; i < how_many_bytes; i++) {
+    for (int i = 0; i < how_many_bytes; i++) {
         cover_image[i] = cover_image[i] & 0b1;  // Mask out all bits except the LSB, which holds the embedded data
                                                 // Safe to modify cover image in-place since we free it without writing
         secret_value = secret_value | cover_image[i];

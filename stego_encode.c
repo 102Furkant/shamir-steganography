@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdint.h>
 
-int steganography_encode (const char *cover_image_path, const char *secret_image_path, const char *encoded_photo_name, int lsb_bit_count) {
+int steganography_encode(const char *cover_image_path, const char *secret_image_path, const char *encoded_image_name, int lsb_bit_count) {
 
     int width_cover_image, height_cover_image, comp_cover_image;
     int width_secret_image, height_secret_image, comp_secret_image;
@@ -62,7 +62,7 @@ int steganography_encode (const char *cover_image_path, const char *secret_image
     }
     
 
-    if (!stbi_write_png(encoded_photo_name, width_cover_image, height_cover_image, 3, cover_image, 0)) {
+    if (!stbi_write_png(encoded_image_name, width_cover_image, height_cover_image, 3, cover_image, 0)) {
         printf("Failed to write image.\n");
         stbi_image_free(cover_image);
         stbi_image_free(secret_image);
@@ -77,7 +77,7 @@ int steganography_encode (const char *cover_image_path, const char *secret_image
     return 0;
 }
 
-int validate_and_load_images (int comp_cover_image, int comp_secret_image, int lsb_bit_count, 
+int validate_and_load_images(int comp_cover_image, int comp_secret_image, int lsb_bit_count, 
     int width_secret_image, int height_secret_image, int width_cover_image, int height_cover_image) {
 
         if (comp_cover_image != 3 || comp_secret_image != 3) {
@@ -97,7 +97,7 @@ int validate_and_load_images (int comp_cover_image, int comp_secret_image, int l
         
         return 0;
     }
-void prepare_payload (int secret_width, int secret_height, int lsb_bit_count, unsigned char *cover_image) {
+void prepare_payload(int secret_width, int secret_height, int lsb_bit_count, unsigned char *cover_image) {
 
     embed_16_bits_to_ls1b(cover_image, secret_width);
     embed_16_bits_to_ls1b(cover_image + 16, MAGIC_NUMBER1);      // Magic numbers used during decode to verify that the image contains hidden data
@@ -112,7 +112,7 @@ void prepare_payload (int secret_width, int secret_height, int lsb_bit_count, un
 
 }
 
-void embed_16_bits_to_ls1b (unsigned char* cover_image, int source_data) {
+void embed_16_bits_to_ls1b(unsigned char* cover_image, int source_data) {
     for (int i = 15; i >= 0; i--) {
         cover_image[i] = (cover_image[i] & 0b11111110) | (source_data & 1);
         source_data = source_data >> 1;
@@ -120,7 +120,7 @@ void embed_16_bits_to_ls1b (unsigned char* cover_image, int source_data) {
 
 }
 
-void embed_bits_to_cover_image (int lsb_bit_count, unsigned char *new_secret_image, size_t secret_image_index, size_t cover_image_index,
+void embed_bits_to_cover_image(int lsb_bit_count, unsigned char *new_secret_image, size_t secret_image_index, size_t cover_image_index,
     uint8_t mask, uint8_t bits_arr[], unsigned char *cover_image){
         // Take m bytes from the secret image and split them bit by bit into 8 chunks
         for (int i = 0; i < lsb_bit_count; i++) {

@@ -8,7 +8,14 @@
 
 extern int N, K;   // N: total number of shares, K: threshold and provided by the user in main
 
-int sss_encode(const char *secret_image_path, char **sss_encoded_image_names, size_t seed) {
+int sss_encode(const char *secret_image_path, const char *destination_folder_path) {
+
+
+    size_t seed; // temporary for debugging
+
+
+    // size_t seed = generate_seed_by_hashing(secret_image_path);
+
 
     int *polynomial_coefficients = (int *)malloc(K * sizeof(int));   // Holds the polynomial coefficients
 
@@ -69,9 +76,12 @@ int sss_encode(const char *secret_image_path, char **sss_encoded_image_names, si
         encode_byte(polynomial_coefficients, encoded_images, byte_index, image_total_byte);
     }
     
+
     for (int i = 0; i < N; i++) {
-        stbi_write_png(sss_encoded_image_names[i], image_width, image_height, image_comp, encoded_images + (i * image_width * image_height * image_comp), image_width * image_comp);
-        printf("%s created.\n", sss_encoded_image_names[i]);
+        char sss_encoded_image_name[128] = {};
+        generate_share_path(sss_encoded_image_name, destination_folder_path, i);
+        stbi_write_png(sss_encoded_image_name, image_width, image_height, image_comp, encoded_images + (i * image_width * image_height * image_comp), image_width * image_comp);
+        printf("%s created.\n", sss_encoded_image_name);
     }
 
     stbi_image_free(main_image);
@@ -108,4 +118,8 @@ void encode_byte(int *polynomial_coefficients, unsigned char *encoded_images, si
 
         encoded_images[share_index * image_total_byte + byte_index] = sum;  // Stores the calculated sum (share) into the corresponding byte index of the specific image
     }
+}
+
+void generate_share_path(char *output_buffer, const char *destination_folder_path, int index) {
+    sprintf(output_buffer, "%s%cshare%d.png", destination_folder_path, PATH_SEP, index + 1);
 }

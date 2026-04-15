@@ -1,20 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "stego.h"
 #include "sss.h"
 #include "menu.h"
 #include "utils.h"
-
-#ifdef _WIN32
-    #include <direct.h>
-    #define make_dir(name) _mkdir(name)
-    #define CLEAR_SCREEN system("cls");
-#else
-    #include <sys/stat.h>
-    #include <sys/types.h>
-    #define make_dir(name) mkdir(name, 0777)
-    #define CLEAR_SCREEN system("clear");
-#endif
 
 int N;
 int K;
@@ -71,19 +61,17 @@ void menu() {
 
             break;
         case 7: {
-            char first_image_path[100];
+            char first_image_path[FOLDER_PATH_SIZE];
             printf("Enter first image path: ");
-            scanf("%99s", first_image_path);
-            int c;
-            while ((c = getchar()) != '\n' && c != EOF);
+            set_path_or_name(first_image_path);
 
-            char second_image_path[100];
+            char second_image_path[FOLDER_PATH_SIZE];
             printf("Enter second image path: ");
-            scanf("%99s", second_image_path);
-            while ((c = getchar()) != '\n' && c != EOF);
+            set_path_or_name(second_image_path);
 
             double psnr_value = calculate_psnr(first_image_path, second_image_path);
-            if( psnr_value > 0) printf("PSNR Value is: %lf", psnr_value);
+            if( psnr_value == INFINITY) printf("PSNR Value: INFINITY!\n");
+            else if (psnr_value >= 0) printf("PSNR value: %.2lf dB\n", psnr_value);
             break;
         }
         case 8:
@@ -100,44 +88,67 @@ void menu() {
 }
 
 void encode_both() {
-    char secret_image_path[100];
+    char project_folder_name[FILE_NAME_SIZE] = {};
+
+    if (!set_project_folder_name(project_folder_name)) return;
+
+    printf("For Shamir's Secret Sharing\n");
+    printf("--------------------------\n\n");
+
+    char secret_image_path[FOLDER_PATH_SIZE];
     printf("Enter secret image path: ");
-    get_path_or_name(secret_image_path);
+    set_path_or_name(secret_image_path);
 
-    char cover_image_path[100];
+    CLEAR_SCREEN
+
+    printf("For Steganography\n");
+    printf("--------------------------\n\n");
+
+    char cover_image_path[FOLDER_PATH_SIZE] = {};
     printf("Enter cover image path: ");
-    get_path_or_name(cover_image_path);
-
-    char result_image_name[100];
-    printf("Enter result image name: ");
-    get_path_or_name(result_image_name);
+    set_path_or_name(cover_image_path);
 
     int lsb_bit_count;
+
     printf("Enter lsb bit count 1-8 (recommended 1): ");
-    if (!scanf("%d", &lsb_bit_count)) {
+    if (!scanf("%d", &lsb_bit_count) || lsb_bit_count > 8 || lsb_bit_count < 1) {
         printf("Invalid value!\n");
         return;
     }
 
-    if(get_N_and_K) return;
+    CLEAR_SCREEN
 
-    
+    printf("Encoding ...\n");
 
-    printf("Encoding ...");
+    if(set_N_and_K()) return;
 
-    if(steganography_encode(cover_image_path, secret_image_path, result_image_name, lsb_bit_count)) {
+    if (sss_encode(secret_image_path, project_folder_name)) return;
 
+    for (int i = 0; i < N; i++) {
+        char encoded_stego_path[FILE_NAME_SIZE] = {};
+
+        char share_path[FOLDER_PATH_SIZE] = {};
+
+        generate_encoded_stego_path(encoded_stego_path, secret_image_path, project_folder_name, i);
+
+        generate_share_path(share_path, project_folder_name, i);
+
+        if(!steganography_encode(cover_image_path, share_path, encoded_stego_path, lsb_bit_count)) {
+            return;
+        }
     }
+
+    printf("Encode is successful!\n");
 }
 
-void get_path_or_name(char *image) {
+void set_path_or_name(char *image) {
     scanf("%99s", image);
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 
 }
 
-int get_N_and_K() {
+int set_N_and_K() {
     printf("Enter total number of shares (2-20): ");
     if (!scanf("%d", &N) || N < 2 || N > 20) {
         printf("Invalid value!\n");
@@ -151,9 +162,56 @@ int get_N_and_K() {
     }
 
     if (K > N) {
-        printf("Threshold value can not be larger than total numver of shares!");
+        printf("Threshold value can not be larger than total numver of shares!\n");
         return 1;
     }
 
     return 0;
+}
+
+int set_project_folder_name(char *project_folder_name) {
+    int choice;
+
+    printf("1. Create a folder to save outputs\n");
+    printf("2. Save the outputs to an existing folder\n");
+    printf("Please enter an option: ");
+
+    if ((scanf("%d", &choice) != 1) || (choice != 1 && choice != 2)) {
+        printf("Invalid option!\n");
+        return 1;
+    }
+
+    else if (choice == 1) {
+        printf("Enter folder name: ");
+        set_path_or_name(project_folder_name);
+        make_dir(project_folder_name)
+    }
+
+    else {
+        printf("Enter the path: ");
+        set_path_or_name(project_folder_name);
+    }
+
+    return 0;
+}
+
+void generate_encoded_stego_path(char output_path[], const char secret_image_path[], char destination_folder_path[], int index) {
+
+    char secret_image_name[FILE_NAME_SIZE];
+    int secret_image_name_len = 0;
+    int secret_image_path_len = 0;
+    for (int i = 0; i < FILE_NAME_SIZE; i++) {
+        if (secret_image_path[i] == '\0') break;
+        secret_image_name_len++;
+        secret_image_path_len++;
+        if (secret_image_path[i] == PATH_SEP) secret_image_name_len = 0;
+    }
+
+    for (int i = 0; i < secret_image_name_len; i++) {
+        secret_image_name[i] = secret_image_path[secret_image_path_len - secret_image_name_len + i];
+    }
+
+    secret_image_name[secret_image_name_len] = '\0';
+
+    sprintf(output_path, "%s%c%s_sss_stego_encoded%d.png", destination_folder_path, PATH_SEP, secret_image_name, index + 1);  
 }
