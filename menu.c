@@ -11,17 +11,19 @@ int K;
 
 void menu() {
 
-    printf("      ░▒▓███████▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░       ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░▒▓████████▓▒░    \n");
-    printf("      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        \n");
-    printf("      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        \n");
-    printf("      ░▒▓███████▓▒░░▒▓█▓▒░░▒▓██████▓▒░       ░▒▓█▓▒░      ░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░  ░▒▓█▓▒░        \n");
-    printf("      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░        \n");
-    printf("      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░        \n");
-    printf("      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░       ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░        \n\n");
+
     
     int choice;
 
     while(1){
+        CLEAR_SCREEN
+        printf("      ░▒▓███████▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░       ░▒▓██████▓▒░░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░▒▓████████▓▒░    \n");
+        printf("      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        \n");
+        printf("      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░        \n");
+        printf("      ░▒▓███████▓▒░░▒▓█▓▒░░▒▓██████▓▒░       ░▒▓█▓▒░      ░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓███████▓▒░  ░▒▓█▓▒░        \n");
+        printf("      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░        \n");
+        printf("      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░        \n");
+        printf("      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░       ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░        \n\n");
         printf("                                              [ P i x C r y p t  v1.0 ]                                           \n");
         printf("Author: 102Furkant\n\n\n");
         printf("1. Encode an image using Steganography and Shamir's Secret Sharing combined\n");
@@ -72,6 +74,7 @@ void menu() {
             double psnr_value = calculate_psnr(first_image_path, second_image_path);
             if( psnr_value == INFINITY) printf("PSNR Value: INFINITY!\n");
             else if (psnr_value >= 0) printf("PSNR value: %.2lf dB\n", psnr_value);
+            wait_until_input();
             break;
         }
         case 8:
@@ -90,7 +93,7 @@ void menu() {
 void encode_both() {
     char project_folder_name[FILE_NAME_SIZE] = {};
 
-    if (!set_project_folder_name(project_folder_name)) return;
+    if (set_project_folder_name(project_folder_name)) return;
 
     printf("For Shamir's Secret Sharing\n");
     printf("--------------------------\n\n");
@@ -133,12 +136,17 @@ void encode_both() {
 
         generate_share_path(share_path, project_folder_name, i);
 
-        if(!steganography_encode(cover_image_path, share_path, encoded_stego_path, lsb_bit_count)) {
+        if(steganography_encode(cover_image_path, share_path, encoded_stego_path, lsb_bit_count)) {
             return;
         }
     }
 
-    printf("Encode is successful!\n");
+    printf("\n==============================================\n");
+    printf("SUCCESS: Encode completed successfully!\n");
+    printf("Files saved in: %s\n", project_folder_name);
+    printf("==============================================\n\n");
+
+    wait_until_input();
 }
 
 void set_path_or_name(char *image) {
@@ -152,17 +160,20 @@ int set_N_and_K() {
     printf("Enter total number of shares (2-20): ");
     if (!scanf("%d", &N) || N < 2 || N > 20) {
         printf("Invalid value!\n");
+        wait_until_input();
         return 1;
     }
 
     printf("Enter threshold value (1-7): ");
     if (!scanf("%d", &K) || K < 1 || K > 7) {
         printf("Invalid value!\n");
+        wait_until_input();
         return 1;
     }
 
     if (K > N) {
         printf("Threshold value can not be larger than total numver of shares!\n");
+        wait_until_input();
         return 1;
     }
 
@@ -178,6 +189,7 @@ int set_project_folder_name(char *project_folder_name) {
 
     if ((scanf("%d", &choice) != 1) || (choice != 1 && choice != 2)) {
         printf("Invalid option!\n");
+        wait_until_input();
         return 1;
     }
 
@@ -214,4 +226,13 @@ void generate_encoded_stego_path(char output_path[], const char secret_image_pat
     secret_image_name[secret_image_name_len] = '\0';
 
     sprintf(output_path, "%s%c%s_sss_stego_encoded%d.png", destination_folder_path, PATH_SEP, secret_image_name, index + 1);  
+}
+
+void wait_until_input() {
+    printf("Press ENTER to return to the main menu...");
+
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+
+    getchar();
 }

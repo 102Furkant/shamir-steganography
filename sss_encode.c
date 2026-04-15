@@ -11,7 +11,7 @@ extern int N, K;   // N: total number of shares, K: threshold and provided by th
 int sss_encode(const char *secret_image_path, const char *destination_folder_path) {
 
 
-    size_t seed; // temporary for debugging
+    size_t seed = 12345; // temporary for debugging
 
 
     // size_t seed = generate_seed_by_hashing(secret_image_path);
