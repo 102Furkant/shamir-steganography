@@ -1,8 +1,10 @@
 #ifndef HEADERS_MENU_H
 #define HEADERS_MENU_H
 
-#define FILE_NAME_SIZE 64
-#define FOLDER_PATH_SIZE 128
+#define FILE_NAME_SIZE 128
+#define FOLDER_PATH_SIZE 256
+#define MAX_K 7
+#define MAX_N 20
 
 #ifdef _WIN32
     #include <direct.h>
@@ -31,6 +33,8 @@ void generate_encoded_stego_path(char output_path[], const char secret_image_pat
 
 void wait_until_input();
 
+void encode_stego_only();
 
+void encode_sss_only();
 
 #endif

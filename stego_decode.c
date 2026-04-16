@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-int steganography_decode(const char *image_path, int which_photo) {
+int steganography_decode(const char *image_path, const char *decoded_image_path) {
 
     int width_cover_image, height_cover_image, comp_cover_image;
 
@@ -67,11 +67,7 @@ int steganography_decode(const char *image_path, int which_photo) {
         secret_image_index += lsb_bit_count;
     }
 
-    char stego_decoded_name[64];
-
-    sprintf(stego_decoded_name,"stego_decoded%d.png", which_photo);
-
-    stbi_write_png(stego_decoded_name, width_secret_image, height_secret_image, 3, secret_image, 0);
+    stbi_write_png(decoded_image_path, width_secret_image, height_secret_image, 3, secret_image, 0);
 
 
     stbi_image_free(cover_image);

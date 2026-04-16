@@ -9,7 +9,7 @@
 
 extern int N, K;  // N: total number of shares, K: threshold and provided by the user in main
 
-int sss_decode(char *filenames[], int *x_values, size_t seed) {
+int sss_decode(char **filenames) {
 
     unsigned char **encoded_images = malloc(K * sizeof(unsigned char *));   // Allocates memory for K share images
     if (!encoded_images) {
@@ -28,7 +28,15 @@ int sss_decode(char *filenames[], int *x_values, size_t seed) {
         }
     }
 
-    int total_byte = width * height * comp;
+    size_t total_byte = width * height * comp;
+
+    int *x_values = malloc(K * sizeof(int));
+
+    for (int i = 0; i < K; i++) {
+        x_values[i] = read_share_index(encoded_images[i], total_byte);
+    }
+
+    
 
     unsigned char *shuffled_image = malloc(total_byte * sizeof(char));
 
@@ -40,6 +48,8 @@ int sss_decode(char *filenames[], int *x_values, size_t seed) {
         }
         shuffled_image[i] = lagrange_interpolation(x_values, y_values);
     }
+
+    size_t seed = 12345;
 
     size_t *perm = malloc(total_byte * sizeof(size_t));
     srand(seed);
@@ -66,4 +76,11 @@ int sss_decode(char *filenames[], int *x_values, size_t seed) {
     free(inv_perm);
 
     return 0;    
+}
+
+static int read_share_index(unsigned char *img, size_t total_byte) {  // Static because there is another function with the same body but a different name in stego_decode.c
+    int share_index = 0;
+    for (int i = 0; i < 3; i++)
+        share_index = (share_index << 1) | (img[total_byte - 3 + i] & 1);
+    return share_index;
 }

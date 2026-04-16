@@ -10,13 +10,6 @@ extern int N, K;   // N: total number of shares, K: threshold and provided by th
 
 int sss_encode(const char *secret_image_path, const char *destination_folder_path) {
 
-
-    size_t seed = 12345; // temporary for debugging
-
-
-    // size_t seed = generate_seed_by_hashing(secret_image_path);
-
-
     int *polynomial_coefficients = (int *)malloc(K * sizeof(int));   // Holds the polynomial coefficients
 
     int image_width, image_height, image_comp;
@@ -32,6 +25,8 @@ int sss_encode(const char *secret_image_path, const char *destination_folder_pat
 
     // To avoid issues with white colors; since 253 % 251 = 2 % 251, a value of 253 would be calculated as 2 during decoding. This step is to eliminate that problem
     for (int i = 0; i < image_total_byte; i++)   if (main_image[i] > PRIME_NUMBER - 1) main_image[i] = PRIME_NUMBER - 1;
+
+    size_t seed = 12345;
 
     size_t *perm = malloc(image_total_byte * sizeof(size_t));
 
@@ -80,6 +75,7 @@ int sss_encode(const char *secret_image_path, const char *destination_folder_pat
     for (int i = 0; i < N; i++) {
         char sss_encoded_image_name[128] = {};
         generate_share_path(sss_encoded_image_name, destination_folder_path, i);
+        embed_share_index_to_ls1b(encoded_images + (i * image_width * image_height * image_comp), image_total_byte, i);
         stbi_write_png(sss_encoded_image_name, image_width, image_height, image_comp, encoded_images + (i * image_width * image_height * image_comp), image_width * image_comp);
         printf("%s created.\n", sss_encoded_image_name);
     }
@@ -122,4 +118,11 @@ void encode_byte(int *polynomial_coefficients, unsigned char *encoded_images, si
 
 void generate_share_path(char *output_buffer, const char *destination_folder_path, int index) {
     sprintf(output_buffer, "%s%cshare%d.png", destination_folder_path, PATH_SEP, index + 1);
+}
+
+void embed_share_index_to_ls1b(unsigned char *share_image, size_t total_byte, int index) {  
+    for (int i = 2; i >= 0; i--) {
+        share_image[total_byte - 3 + (2 - i)] = (share_image[total_byte - 3 + (2 - i)] & 0b11111110) | (index & 1);
+        index = index >> 1;
+    }
 }

@@ -96,7 +96,8 @@ int validate_and_load_images(int comp_cover_image, int comp_secret_image, int ls
         }
         
         return 0;
-    }
+}
+
 void prepare_payload(int secret_width, int secret_height, int lsb_bit_count, unsigned char *cover_image) {
 
     embed_16_bits_to_ls1b(cover_image, secret_width);
@@ -112,16 +113,15 @@ void prepare_payload(int secret_width, int secret_height, int lsb_bit_count, uns
 
 }
 
-void embed_16_bits_to_ls1b(unsigned char* cover_image, int source_data) {
+void embed_16_bits_to_ls1b(unsigned char *cover_image, int source_data) {
     for (int i = 15; i >= 0; i--) {
         cover_image[i] = (cover_image[i] & 0b11111110) | (source_data & 1);
         source_data = source_data >> 1;
     }
-
 }
 
 void embed_bits_to_cover_image(int lsb_bit_count, unsigned char *new_secret_image, size_t secret_image_index, size_t cover_image_index,
-    uint8_t mask, uint8_t bits_arr[], unsigned char *cover_image){
+    uint8_t mask, uint8_t bits_arr[], unsigned char *cover_image) {
         // Take m bytes from the secret image and split them bit by bit into 8 chunks
         for (int i = 0; i < lsb_bit_count; i++) {
             unsigned char byte = new_secret_image[secret_image_index + i];
@@ -138,4 +138,4 @@ void embed_bits_to_cover_image(int lsb_bit_count, unsigned char *new_secret_imag
             cover_image[cover_image_index + i] |= (bits_arr[i] & mask); // Then embed
         }
 
-    }
+}

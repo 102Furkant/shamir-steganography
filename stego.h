@@ -27,7 +27,7 @@ void de_embed_bits_to_bytes_arr(uint8_t bits_arr[],uint8_t bytes_arr[], int lsb_
 
 void set_secret_image(int lsb_bit_count, unsigned char *secret_image, size_t secret_image_index, uint8_t de_embeded_bytes[], size_t secret_image_total_byte);
 
-int steganography_decode(const char *image_path, int which_photo);
+int steganography_decode(const char *image_path, const char *decoded_image_path);
 
 
 

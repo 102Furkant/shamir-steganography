@@ -17,11 +17,15 @@ void generate_random_polynomial_coefficient(int *polynomial_coefficients);
 
 long long int int_pow(int base, int exponent);
 
-void generate_share_path(char *output_buffer, const char *folder, int index);
-
 void encode_byte(int *polynomial_coefficients, unsigned char *encoded_images, size_t byte_index, size_t image_total_byte);
 
-int sss_decode(char *filenames[], int *xler, size_t seed);
+void generate_share_path(char *output_buffer, const char *destination_folder_path, int index);
+
+void embed_share_index_to_ls1b(unsigned char *share_image, size_t total_byte, int index);
+
+int sss_decode(char **filenames);
+
+static int read_share_index(unsigned char *img, size_t total_byte);
 
 
 #endif
