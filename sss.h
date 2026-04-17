@@ -23,7 +23,7 @@ void generate_share_path(char *output_buffer, const char *destination_folder_pat
 
 void embed_share_index_to_ls1b(unsigned char *share_image, size_t total_byte, int index);
 
-int sss_decode(char **filenames);
+int sss_decode(char **filenames, char *result_image_name);
 
 static int read_share_index(unsigned char *img, size_t total_byte);
 

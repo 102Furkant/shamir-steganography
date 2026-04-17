@@ -9,7 +9,7 @@
 
 extern int N, K;  // N: total number of shares, K: threshold and provided by the user in main
 
-int sss_decode(char **filenames) {
+int sss_decode(char **filenames, char *result_image_name) {
 
     unsigned char **encoded_images = malloc(K * sizeof(unsigned char *));   // Allocates memory for K share images
     if (!encoded_images) {
@@ -63,7 +63,7 @@ int sss_decode(char **filenames) {
     // Reverses the permutation to restore the original byte order
     reverse_permutation((const char *)shuffled_image, (char *)result_image, inv_perm, total_byte);
 
-    stbi_write_png("decoded_photo.png", width, height, comp, result_image, width * comp);
+    stbi_write_png(result_image_name, width, height, comp, result_image, width * comp);
 
     free(y_values);
     for (int i = 0; i < K; i++) {

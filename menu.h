@@ -37,4 +37,10 @@ void encode_stego_only();
 
 void encode_sss_only();
 
+decode_both();
+
+decode_stego_only();
+
+void decode_sss_only();
+
 #endif
