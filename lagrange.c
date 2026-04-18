@@ -1,4 +1,4 @@
-#include <lagrange.h>
+#include "lagrange.h"
 
 
 extern int N, K;  // N: total number of shares, K: threshold and provided by the user in main
