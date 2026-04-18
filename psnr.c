@@ -1,10 +1,10 @@
+#include <stdio.h>
+#include <math.h>
 #include "stb_image.h"
 #include "stb_image_write.h"
-#include <math.h>
-#include <stdio.h>
-#include <utils.h>
+#include "utils.h"
 
-double psnr(const char *first_image_path, const char *second_image_path) {
+double calculate_psnr(const char *first_image_path, const char *second_image_path) {
 
     int width_image1, height_image1, comp_image1;
     int width_image2, height_image2, comp_image2;
