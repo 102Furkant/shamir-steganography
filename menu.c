@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <dirent.h>
 #include "stego.h"
 #include "sss.h"
 #include "menu.h"
@@ -64,12 +63,12 @@ void menu() {
             break;
         case 7: {
             char first_image_path[FOLDER_PATH_SIZE];
-            printf("Enter first image path: ");
-            set_path_or_name(first_image_path);
+            printf("Enter first image path (include .png, .jpg, etc.): ");
+            set_folder_path(first_image_path);
 
             char second_image_path[FOLDER_PATH_SIZE];
-            printf("Enter second image path: ");
-            set_path_or_name(second_image_path);
+            printf("Enter second image path (include .png, .jpg, etc.): ");
+            set_folder_path(second_image_path);
 
             double psnr_value = calculate_psnr(first_image_path, second_image_path);
             if( psnr_value == INFINITY) printf("PSNR Value: INFINITY!\n");
@@ -91,7 +90,7 @@ void menu() {
 }
 
 void encode_both() {
-    char project_folder_name[FILE_NAME_SIZE] = {};
+    char project_folder_name[FOLDER_PATH_SIZE] = {};
 
     if (set_project_folder_name(project_folder_name)) return;
 
@@ -99,8 +98,8 @@ void encode_both() {
     printf("--------------------------\n\n");
 
     char secret_image_path[FOLDER_PATH_SIZE];
-    printf("Enter the path of the image to be encoded: ");
-    set_path_or_name(secret_image_path);
+    printf("Enter the path of the image to be encoded (include .png, .jpg, etc.): ");
+    set_folder_path(secret_image_path);
 
     if(set_N_and_K()) return;
 
@@ -110,8 +109,8 @@ void encode_both() {
     printf("--------------------------\n\n");
 
     char cover_image_path[FOLDER_PATH_SIZE] = {};
-    printf("Enter cover image path: ");
-    set_path_or_name(cover_image_path);
+    printf("Enter cover image path (include .png, .jpg, etc.): ");
+    set_folder_path(cover_image_path);
 
     int lsb_bit_count;
 
@@ -129,15 +128,15 @@ void encode_both() {
     if (sss_encode(secret_image_path, project_folder_name)) return;
 
     for (int i = 0; i < N; i++) {
-        char encoded_stego_path[FILE_NAME_SIZE] = {};
+        char output_stego_path[FOLDER_PATH_SIZE] = {};
 
-        char share_path[FOLDER_PATH_SIZE] = {};
+        char sss_share_path[FOLDER_PATH_SIZE] = {};
 
-        generate_encoded_stego_path(encoded_stego_path, secret_image_path, project_folder_name, i);
+        generate_stego_output_path(output_stego_path, secret_image_path, project_folder_name, i);
 
-        generate_share_path(share_path, project_folder_name, i);
+        generate_share_path(sss_share_path, project_folder_name, i);
 
-        if(steganography_encode(cover_image_path, share_path, encoded_stego_path, lsb_bit_count)) {
+        if(steganography_encode(cover_image_path, sss_share_path, output_stego_path, lsb_bit_count)) {
             wait_until_input();
             return;
         }
@@ -151,11 +150,17 @@ void encode_both() {
     wait_until_input();
 }
 
-void set_path_or_name(char *image) {
-    scanf("%99s", image);
+void set_file_name(char *image) {
+    scanf("%255s", image);
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 
+}
+
+void set_folder_path(char *folder_path) {
+    scanf("%511s", folder_path);
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
 int set_N_and_K() {
@@ -196,20 +201,20 @@ int set_project_folder_name(char *project_folder_name) {
     }
 
     else if (choice == 1) {
-        printf("Enter folder name: ");
-        set_path_or_name(project_folder_name);
+        printf("Enter the folder path: ");
+        set_folder_path(project_folder_name);
         make_dir(project_folder_name)
     }
 
     else {
-        printf("Enter the path: ");
-        set_path_or_name(project_folder_name);
+        printf("Enter the folder path: ");
+        set_folder_path(project_folder_name);
     }
 
     return 0;
 }
 
-void generate_encoded_stego_path(char output_path[], const char secret_image_path[], char destination_folder_path[], int index) {
+void generate_stego_output_path(char output_path[], const char secret_image_path[], char destination_folder_path[], int index) {
 
     char secret_image_name[FILE_NAME_SIZE] = {};
     int secret_image_name_len = 0;
@@ -237,28 +242,25 @@ void generate_encoded_stego_path(char output_path[], const char secret_image_pat
 
 void wait_until_input() {
     printf("Press ENTER to return to the main menu...");
-
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
-
-    getchar();
 }
 
 void encode_stego_only() {
-    char project_folder_name[FILE_NAME_SIZE] = {};
+    char project_folder_name[FOLDER_PATH_SIZE] = {};
 
     if (set_project_folder_name(project_folder_name)) return;
 
     char cover_image_path[FOLDER_PATH_SIZE] = {};
-    printf("Enter cover image path: ");
-    set_path_or_name(cover_image_path);
+    printf("Enter cover image path (include .png, .jpg, etc.): ");
+    set_folder_path(cover_image_path);
 
     char secret_image_path[FOLDER_PATH_SIZE];
-    printf("Enter the path of the image to be encoded: ");
-    set_path_or_name(secret_image_path);
+    printf("Enter the path of the image to be encoded (include .png, .jpg, etc.): ");
+    set_folder_path(secret_image_path);
 
-    char encoded_stego_path[FILE_NAME_SIZE] = {};
-    generate_encoded_stego_path(encoded_stego_path, secret_image_path, project_folder_name, -1);
+    char output_stego_path[FOLDER_PATH_SIZE] = {};
+    generate_stego_output_path(output_stego_path, secret_image_path, project_folder_name, -1);
 
     int lsb_bit_count;
 
@@ -273,7 +275,7 @@ void encode_stego_only() {
 
     printf("Encoding ...\n");
 
-    if(steganography_encode(cover_image_path, secret_image_path, encoded_stego_path, lsb_bit_count)) {
+    if(steganography_encode(cover_image_path, secret_image_path, output_stego_path, lsb_bit_count)) {
         wait_until_input();
         return;
     }
@@ -287,13 +289,13 @@ void encode_stego_only() {
 }
 
 void encode_sss_only() {
-    char project_folder_name[FILE_NAME_SIZE] = {};
+    char project_folder_name[FOLDER_PATH_SIZE] = {};
 
     if (set_project_folder_name(project_folder_name)) return;
 
     char secret_image_path[FOLDER_PATH_SIZE];
-    printf("Enter the path of the image to be encoded: ");
-    set_path_or_name(secret_image_path);
+    printf("Enter the path of the image to be encoded (include .png, .jpg, etc.): ");
+    set_folder_path(secret_image_path);
 
     if(set_N_and_K()) return;
 
@@ -315,7 +317,7 @@ void encode_sss_only() {
 }
 
 void decode_both() {
-    char project_folder_name[FILE_NAME_SIZE] = {};
+    char project_folder_name[FOLDER_PATH_SIZE] = {};
 
     if (set_project_folder_name(project_folder_name)) return;
 
@@ -328,59 +330,78 @@ void decode_both() {
     }
 
     char result_image_name[FILE_NAME_SIZE] = {};
-    printf("Enter a name for result image: ");
-    set_path_or_name(result_image_name);
+    printf("Enter a name for result image (exclude .png, .jpg, etc.): ");
+    set_file_name(result_image_name);
 
     char result_image_path[FOLDER_PATH_SIZE] = {};
 
-    sprintf(result_image_path, "%s%c%s", project_folder_name, PATH_SEP, result_image_name);
+    sprintf(result_image_path, "%s%c%s.png", project_folder_name, PATH_SEP, result_image_name);
 
-    char stego_decode_input_path[FOLDER_PATH_SIZE] = {};
+    char cover_image_path[FOLDER_PATH_SIZE] = {};
+
+    int *share_indexes = malloc(input_k * sizeof(int));
 
     int success = 0;
 
-    char **stego_decode_output_names = malloc(input_k * sizeof(char *));
+    char **temp_share_paths = malloc(input_k * sizeof(char *));
 
-    if (!stego_decode_output_names) {
+    if (!temp_share_paths) {
         printf("Memory allocation failed!\n");
         wait_until_input();
         return;
     }
 
     for (int i = 0; i < input_k; i++) {
-        stego_decode_output_names[i] = malloc(FOLDER_PATH_SIZE * sizeof(char));
-        if (!stego_decode_output_names[i]) {
+        temp_share_paths[i] = malloc(FOLDER_PATH_SIZE * sizeof(char));
+        if (!temp_share_paths[i]) {
             printf("Memory allocation failed!\n");
             input_k = i;
             goto cleanup;
         }
     }
 
-    printf("Decoding ...\n");
-
     for (int i = 0; i < input_k; i++) {
-        printf("Please enter the %d. image path: ", i + 1);
-        set_path_or_name(stego_decode_input_path);
+        printf("Please enter the %d. image path (include .png, .jpg, etc.): ", i + 1);
+        set_folder_path(cover_image_path);
 
-        sprintf(stego_decode_output_names[i], "%s%ctemp_stego%d.png", project_folder_name, PATH_SEP, i + 1);
+        printf("Which share path was this path: ");
+        if(!scanf("%d", share_indexes + i) || share_indexes[i] < 1 || share_indexes[i] > MAX_K ) {
+            printf("Invalid value!\n");
+            goto cleanup;
+        }
 
-        if(steganography_decode(stego_decode_input_path, stego_decode_output_names[i])) goto cleanup;
+        if (i > 0) {
+            for (int a = 0; a < i; a++) {
+                if (share_indexes[a] == share_indexes[i]) {
+                    printf("Share indexes must be unique!\n");
+                    goto cleanup;
+                }
+            }
+        }
+
+        sprintf(temp_share_paths[i], "%s%ctemp_stego%d.png", project_folder_name, PATH_SEP, i + 1);
+
+        if(steganography_decode(cover_image_path, temp_share_paths[i])) goto cleanup;
     }
 
-    if (sss_decode(stego_decode_output_names, result_image_path)) goto cleanup;
+
+
+    printf("Decoding ...\n");
+
+    if (sss_decode(temp_share_paths, result_image_path, share_indexes)) goto cleanup;
 
     success = 1;
 
     cleanup:
     if (success) {
         for (int i = 0; i < input_k; i++) {
-            if (remove(stego_decode_output_names[i]) != 0)
+            if (remove(temp_share_paths[i]) != 0)
                 perror("Temporary files could not be deleted");  // Note for me: no need \n in perror
         }
         printf("Temporary files deleted.\n");
     }
-    for (int i = 0; i < input_k; i++) free(stego_decode_output_names[i]);
-    free(stego_decode_output_names);
+    for (int i = 0; i < input_k; i++) free(temp_share_paths[i]);
+    free(temp_share_paths);
 
     if (success) {
         printf("\n==============================================\n");
@@ -393,25 +414,25 @@ void decode_both() {
 }
 
 void decode_stego_only() {
-    char project_folder_name[FILE_NAME_SIZE] = {};
+    char project_folder_name[FOLDER_PATH_SIZE] = {};
 
     if (set_project_folder_name(project_folder_name)) return;
 
-    char stego_decode_input_path[FOLDER_PATH_SIZE] = {};
-    printf("Enter the path of the image to be decoded: ");
-    set_path_or_name(stego_decode_input_path);
+    char stego_input_path[FOLDER_PATH_SIZE] = {};
+    printf("Enter the path of the image to be decoded (include .png, .jpg, etc.): ");
+    set_folder_path(stego_input_path);
 
     char result_image_name[FILE_NAME_SIZE] = {};
-    printf("Enter a name for result image: ");
-    set_path_or_name(result_image_name);
+    printf("Enter a name for result image (exclude .png, .jpg, etc.): ");
+    set_file_name(result_image_name);
 
     char result_image_path[FOLDER_PATH_SIZE] = {};
 
-    sprintf(result_image_path, "%s%c%s", project_folder_name, PATH_SEP, result_image_name);
+    sprintf(result_image_path, "%s%c%s.png", project_folder_name, PATH_SEP, result_image_name);
 
     printf("Decoding ...\n");
 
-    if (steganography_decode(stego_decode_input_path, result_image_path)) {
+    if (steganography_decode(stego_input_path, result_image_path)) {
         wait_until_input();
         return;
     }
@@ -425,7 +446,7 @@ void decode_stego_only() {
 }
 
 void decode_sss_only() {
-    char project_folder_name[FILE_NAME_SIZE] = {};
+    char project_folder_name[FOLDER_PATH_SIZE] = {};
 
     if (set_project_folder_name(project_folder_name)) return;
 
@@ -437,43 +458,61 @@ void decode_sss_only() {
         return;
     }
 
-    char **sss_input_pathes = malloc(input_k * sizeof(char *));
-    if (!sss_input_pathes) {
+    char **share_paths = malloc(input_k * sizeof(char *));
+    if (!share_paths) {
         printf("Memory allocation failed!\n");
         wait_until_input();
         return;
     }
     
     for (int i = 0; i < input_k; i++) {
-        sss_input_pathes[i] = malloc(FOLDER_PATH_SIZE * sizeof(char));
-        if (!sss_input_pathes[i]) {
+        share_paths[i] = malloc(FOLDER_PATH_SIZE * sizeof(char));
+        if (!share_paths[i]) {
             printf("Memory allocation failed!\n");
-            for (int j = 0; j < i; j++) free(sss_input_pathes[j]);
-            free(sss_input_pathes);
+            for (int j = 0; j < i; j++) free(share_paths[j]);
+            free(share_paths);
             wait_until_input();
             return;
         }
     }
 
+    int *share_indexes = malloc(input_k * sizeof(int));
+
     for (int i = 0; i < input_k; i++) {
-        printf("Please enter the %d. image path: ", i + 1);
-        set_path_or_name(sss_input_pathes[i]);
+        printf("Please enter the %d. share path (include .png .jpv etc.): ", i + 1);
+        set_folder_path(share_paths[i]);
+        printf("Which share path was this: ");
+        if(!scanf("%d", share_indexes + i) || share_indexes[i] < 1 || share_indexes[i] > MAX_K ) {
+            printf("Invalid value!\n"); 
+            wait_until_input();
+            return;
+        }
+
+        if (i > 0) {
+            for (int a = 0; a < i; a++) {
+                if (share_indexes[a] == share_indexes[i]) {
+                    printf("Share indexes must be unique!\n");
+                    wait_until_input();
+                    return;
+                }
+            }
+        }
     }
 
 
     char result_image_name[FILE_NAME_SIZE] = {};
-    printf("Enter a name for result image: ");
-    set_path_or_name(result_image_name);
+    printf("Enter a name for result image (exclude .png, .jpg, etc.): ");
+    set_file_name(result_image_name);
     
     char result_image_path[FOLDER_PATH_SIZE] = {};
     
-    sprintf(result_image_path, "%s%c%s", project_folder_name, PATH_SEP, result_image_name);
+    sprintf(result_image_path, "%s%c%s.png", project_folder_name, PATH_SEP, result_image_name);
 
     printf("Decoding ...\n");
 
-    if (sss_decode(sss_input_pathes, result_image_path)) {  
-        for (int i = 0; i < input_k; i++) free(sss_input_pathes[i]);
-        free(sss_input_pathes);  
+    if (sss_decode(share_paths, result_image_path, share_indexes)) {  
+        for (int i = 0; i < input_k; i++) free(share_paths[i]);
+        free(share_paths);  
         wait_until_input();
         return;
     }
@@ -483,8 +522,8 @@ void decode_sss_only() {
     printf("Files saved in: %s\n", project_folder_name);
     printf("==============================================\n\n");
 
-    for (int i = 0; i < input_k; i++) free(sss_input_pathes[i]);
-    free(sss_input_pathes);
+    for (int i = 0; i < input_k; i++) free(share_paths[i]);
+    free(share_paths);
 
     wait_until_input();
 }
