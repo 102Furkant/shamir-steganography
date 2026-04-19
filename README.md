@@ -2,7 +2,7 @@
 
 **PixCrypt** is a command-line tool written in C that combines two powerful techniques — **Shamir's Secret Sharing (SSS)** and **LSB Steganography** — to securely split and hide images.
 
-<img src="menu.png" width="700"/>
+<img width="700" src="https://github.com/user-attachments/assets/08107dfe-d16b-4c23-8595-7c870d191dfb"/>
 
 ---
 
@@ -22,11 +22,11 @@ Shamir's Secret Sharing splits a secret image into N shares. Any K of those shar
 
 **Original image:**
 
-<img src="mona_lisa.jpg" width="350"/>
+<img width="350" src="https://github.com/user-attachments/assets/7c536f6b-faa5-49a2-9e80-bf76192f5efb"/>
 
 **Shares after Shamir encoding (N=3, K=2):**
 
-<img src="share1.png" width="250"/> <img src="share2.png" width="250"/> <img src="share3.png" width="250"/>
+<img width="250" src="https://github.com/user-attachments/assets/e12bb73c-778c-416b-8ac0-2cae6682fea1"/> <img width="250" src="https://github.com/user-attachments/assets/94c30ecb-5633-4962-84bc-ab281eee105c"/> <img width="250" src="https://github.com/user-attachments/assets/1dbf80d4-69ea-4ff9-a225-d600dbd00bfc"/>
 
 It's immediately obvious that something is being hidden. Sending or storing these images would raise suspicion. This is where steganography comes in.
 
