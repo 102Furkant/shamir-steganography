@@ -128,7 +128,6 @@ Then follow the interactive menu:
 ## Limitations
 
 - Maximum K threshold: 7, Maximum N shares: 20
-- Share indexes must be between 1 and N and must be unique
 - Cover image must be large enough to contain the share data
 - Only PNG output is supported for shares and decoded images
 
