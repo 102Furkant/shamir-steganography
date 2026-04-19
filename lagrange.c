@@ -22,6 +22,7 @@ int lagrange_interpolation(int *x_values, int *y_values) {
 }
 
 int mod_inverse(int value, int mod) {
+    if (value == 0) return 0;
     int original_mod = mod;
     int prev_coeff = 0, curr_coeff = 1;
     int quotient, temp;
