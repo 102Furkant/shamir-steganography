@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
 #include "stb_image.h"
 #include "stb_image_write.h"
 #include "stego.h"
-#include <stdint.h>
-#include <string.h>
 
 
 int steganography_decode(const char *image_path, const char *decoded_image_path) {
@@ -19,7 +19,7 @@ int steganography_decode(const char *image_path, const char *decoded_image_path)
     }
 
     if (comp_cover_image != 3) {
-        printf("Only RGB images are supported.\n");
+        printf("Only RGB images are supported.decode\n");
         return 1;
     }
 

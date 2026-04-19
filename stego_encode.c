@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
 #include "stb_image.h"
 #include "stb_image_write.h"
 #include "stego.h"
-#include <string.h>
-#include <stdint.h>
 
 int steganography_encode(const char *cover_image_path, const char *secret_image_path, const char *encoded_image_name, int lsb_bit_count) {
 
@@ -13,11 +13,12 @@ int steganography_encode(const char *cover_image_path, const char *secret_image_
 
     unsigned char *cover_image = stbi_load(cover_image_path, &width_cover_image, &height_cover_image, &comp_cover_image, 3);
     unsigned char *secret_image = stbi_load(secret_image_path, &width_secret_image, &height_secret_image, &comp_secret_image, 3);
-
+    
     if (!cover_image || !secret_image) {
         printf("Failed to load images.\n");
         return 1;
     }
+        
 
     if (validate_and_load_images(comp_cover_image, comp_secret_image, lsb_bit_count, width_secret_image, height_secret_image, width_cover_image, height_cover_image)) {
         stbi_image_free(cover_image);
@@ -79,12 +80,12 @@ int steganography_encode(const char *cover_image_path, const char *secret_image_
 
 int validate_and_load_images(int comp_cover_image, int comp_secret_image, int lsb_bit_count, 
     int width_secret_image, int height_secret_image, int width_cover_image, int height_cover_image) {
-
+        /*
         if (comp_cover_image != 3 || comp_secret_image != 3) {
-            printf("Only RGB images are supported.\n");
+            printf("Only RGB images are supported.encode\n");
             return 1;
         }
-
+        */
         if (width_secret_image > 0xFFFF || height_secret_image > 0xFFFF) {
             printf("Secret image is too big to embed\n");
             return 1;

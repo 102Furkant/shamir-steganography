@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <utils.h>
+#include "utils.h"
 /*
   Fisher-Yates Shuffle Algorithm
  
