@@ -244,6 +244,8 @@ void wait_until_input() {
     printf("Press ENTER to return to the main menu...");
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
+
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
 void encode_stego_only() {
@@ -527,3 +529,4 @@ void decode_sss_only() {
 
     wait_until_input();
 }
+
