@@ -1,6 +1,8 @@
 #ifndef HEADER_SSS_H
 #define HEADER_SSS_H
 
+#include <stddef.h>
+
 #ifdef _WIN32
     #define PATH_SEP '\\'
 #else
@@ -17,7 +19,7 @@ void generate_random_polynomial_coefficient(int *polynomial_coefficients);
 
 long long int int_pow(int base, int exponent);
 
-void encode_byte(int *polynomial_coefficients, unsigned char *all_shares_buffer,, size_t byte_index, size_t image_total_byte);
+void encode_byte(int *polynomial_coefficients, unsigned char *all_shares_buffer, size_t byte_index, size_t image_total_byte);
 
 void generate_share_path(char *output_buffer, const char *destination_folder_path, int index);
 

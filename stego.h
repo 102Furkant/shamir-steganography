@@ -1,6 +1,9 @@
 #ifndef HEADER_STEGO_H
 #define HEADER_STEGO_H
 
+#include <stdint.h>
+#include <stddef.h>
+
 #define MAGIC_NUMBER1 't'
 #define MAGIC_NUMBER2 'f'
 
